@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-//    alias(libs.plugins.kotlin.kapt) // Correctly add this line
-    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.daggerHiltAndroid)
+    alias(libs.plugins.jetbrainsKotlinSerialization)
+    id("kotlin-kapt")
 }
 
 android {
@@ -42,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
@@ -60,19 +61,28 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+
+    // Room
+    implementation(libs.androidx.room.ktx)
+    androidTestImplementation(project(":app"))
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.paging)
+
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    // Compose dependencies
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    // Coroutine Lifecycle Scopes
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
+    // Lifecycle ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     // Dagger - Hilt
     implementation(libs.hilt.android)
-    annotationProcessor(libs.hilt.compiler)
-    annotationProcessor(libs.androidx.hilt.compiler)
+    kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Retrofit
@@ -80,22 +90,41 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
-    // Room
-    implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
 
-    // Kotlin Extensions and Coroutines support for Room
-    implementation(libs.androidx.room.ktx)
+    // Coil
+    implementation(libs.coil.compose)
 
-    // Google map Compose plugin
+    // Extended Icons
+    implementation(libs.androidx.material.icons.extended)
+
+    // Local Tests
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockwebserver)
+    testImplementation(libs.mockk)
+    debugImplementation(libs.ui.test.manifest)
+
     implementation(libs.maps.compose)
     implementation(libs.play.services.maps)
 
-    testImplementation(libs.junit)
+    // Instrumented Tests
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.core.ktx)
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
