@@ -36,6 +36,7 @@ class UserInfoViewModel @Inject constructor(private val getUsersInfo: GetUsersIn
                             usersInfo = res.data ?: emptyList(),
                             isLoading = false
                         )
+                        println("getUsers${_userInfoState.value.usersInfo.toString()}")
                     }
                     is Resource.Error -> {
                         _userInfoState.value = usersInfoState.value.copy(
